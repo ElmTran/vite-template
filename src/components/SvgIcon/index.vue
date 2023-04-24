@@ -1,11 +1,11 @@
 <template>
     <svg :class="svgClass" aria-hidden="true">
-        <use :xlink:href="svgIcon" />
+        <use :xlink:href="svgIcon" :fill="color"/>
     </svg>
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue'
+import { computed } from 'vue'
 const props = defineProps({
     name: {
         type: String,
@@ -14,6 +14,10 @@ const props = defineProps({
     class: {
         type: String,
         default: '',
+    },
+    color: {
+        type: String,
+        default: '#ffffff'
     },
 })
 
