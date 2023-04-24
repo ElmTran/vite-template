@@ -9,6 +9,7 @@ import '@/assets/main.css'
 import 'element-plus/dist/index.css'
 import '@/assets/iconfont/index.js'
 import '@/assets/iconfont/font.css'
+import '@/router/permission.js'
 
 const app = createApp(App)
 app.component('SvgIcon', SvgIcon) // register globally

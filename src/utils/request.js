@@ -1,12 +1,25 @@
 import axios from "axios";
 import { ElMessage } from "element-plus";
+import { getToken } from '@/utils/auth'
 const service = axios.create({
-    baseURL: process.env.VUE_APP_BASE_API,
+    baseURL: import.meta.env.BASE_URL,
     timeout: 5000
 }); 
 
 // request interceptor
 // todo: add a request interceptor
+service.interceptors.request.use(
+    config => {
+        const token = getToken();
+        if (token) {
+            config.headers['Authorization'] = 'Bearer ' + token;
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
 
 // response interceptor
 service.interceptors.response.use(
