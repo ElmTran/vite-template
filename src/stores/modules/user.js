@@ -1,11 +1,14 @@
 import { login, logout } from '@/api/user'
-import { setToken, getToken, removeToken } from '@/utils/auth'
-import { router } from '@/router'
+import { getToken, setToken, removeToken } from '@/utils/auth'
+
+import { resetRouter } from '@/router'
 
 const state = {
     token: getToken(),
     username: '',
-    roles: [],
+    nickname: '',
+    avatar: '',
+    roles: []
 }
 
 const mutations = {
@@ -15,8 +18,14 @@ const mutations = {
     SET_USERNAME: (state, username) => {
         state.username = username
     },
+    SET_NICKNAME: (state, nickname) => {
+        state.nickname = nickname
+    },
     SET_ROLES: (state, roles) => {
         state.roles = roles
+    },
+    SET_AVATAR: (state, avatar) => {
+        state.avatar = avatar
     }
 }
 
@@ -26,12 +35,11 @@ const actions = {
         const { username, password } = userInfo
         return new Promise((resolve, reject) => {
             login({ username: username.trim(), password: password }).then(response => {
-                const { data } = response
+                const data = response
                 commit('SET_TOKEN', data.token)
                 commit('SET_USERNAME', data.username)
                 commit('SET_ROLES', data.roles)
                 setToken(data.token)
-                router.push({ path: '/' })
                 resolve()
             }).catch(error => {
                 reject(error)
@@ -43,18 +51,36 @@ const actions = {
     logout({ commit, state }) {
         return new Promise((resolve, reject) => {
             logout(state.token).then(() => {
+                // reset router
+                resetRouter()
+                // remove token
                 commit('SET_TOKEN', '')
-                commit('SET_USERNAME', '')
                 commit('SET_ROLES', [])
+                commit('SET_USERNAME', '')
+                commit('SET_NICKNAME', '')
+                commit('SET_AVATAR', '')
                 removeToken()
-                router.push({ path: '/login' })
                 resolve()
-            }).catch(error => {
+            }).catch(error => { 
                 reject(error)
             })
         })
     },
+
+    // remove token
+    resetToken({ commit }) {
+        return new Promise(resolve => {
+            commit('SET_TOKEN', '')
+            commit('SET_ROLES', [])
+            commit('SET_USERNAME', '')
+            commit('SET_NICKNAME', '')
+            commit('SET_AVATAR', '')
+            removeToken() // must remove  token  first
+            resolve()
+        })
+    }
 }
+
 
 export default {
     namespaced: true,

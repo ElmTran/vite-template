@@ -11,6 +11,13 @@ export function login(data) {
 export function logout() {
     return request({
         url: '/logout',
-        method: 'post'
+        method: 'post',
+    })
+}
+
+export function fetchUserInfo() {
+    return request({
+        url: `/user/info`,
+        method: 'get'
     })
 }
